@@ -1,34 +1,7 @@
 """
 Air Writing Letter Interval Preprocessor  (m2_preprocess_intervals.py)
 -----------------------------------------------------------------------
-Takes a raw letter recording from m2_recordletterstartstop.py and
-produces an _intervals.txt file with 100ms sliding windows labelled
-with the letter — identical pipeline to m1_preprocess.py but for
-letter data, and without running through the Stage 1 direction model.
-
-Pipeline
---------
-1. Load raw .txt file, parse letter and sample rate from comments
-2. Find valid stroke pairs using debounced B/C -> D/E detection
-3. For each stroke:
-   a. onset  = t_start_press + 100ms
-   b. offset = t_end_press   - 200ms
-   c. Reject if duration < 400ms or > 3000ms
-   d. Slide 100ms windows with 50ms stride over [onset, offset]
-4. Write IntervalStart, IntervalEnd, Label to _intervals.txt
-
-The Label column contains the letter (e.g. 'A', 'B', ..., 'Z').
-
-Input  : {letter}_{timestamp}.txt from m2_recordletterstartstop.py
-Output : {letter}_{timestamp}_intervals.txt
-
-Usage
------
-python m2_preprocess_intervals.py path/to/A_20240101_1200.txt
-python m2_preprocess_intervals.py /path/to/directory/   # batch process all
-python m2_preprocess_intervals.py                        # prompts for path
 """
-
 import os
 import sys
 import numpy as np
@@ -222,16 +195,7 @@ def build_activity_signal(seg: np.ndarray, fs: float) -> np.ndarray:
 def detect_onset_offset(df: pd.DataFrame, fs: float,
                         t_click: float,
                         stroke_idx: int) -> Optional[Tuple[float, float]]:
-    """
-    Detect onset and offset for one stroke using activity signal thresholds.
 
-    Onset  : activity > mu_A + ONSET_STD_MULT*sigma_A for >= ONSET_MIN_MS
-    Offset : activity < mu_A + offset_mult*sigma_A     for >= OFFSET_MIN_MS
-             where offset_mult is derived from the 90th percentile of
-             post-onset activity (matching m1_preprocess.py logic).
-
-    Returns (t_onset, t_offset) or None if rejected.
-    """
     timestamps = df['Timestamp'].to_numpy()
     data       = df[CHANNEL_COLS].to_numpy(dtype=float)
 
