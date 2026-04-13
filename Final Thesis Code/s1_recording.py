@@ -3,20 +3,14 @@ Air Writing Data Collection and Preprocessing System
 Combines real-time data collection from flex sensors and button input
 with preprocessing pipeline for machine learning
 
-Hardware layout — 5 ADS1115 chips across 2 I2C buses
-------------------------------------------------------
-I2C Bus 1 (Pi pin 3=SDA, pin 5=SCL):
+I2C Bus 1:
     Chip #1  Flex sensor 1   ADDR→GND   0x48
     Chip #2  Flex sensor 2   ADDR→VDD   0x49
 
-I2C Bus 2 (Pi pin 15=SDA GPIO22, pin 16=SCL GPIO23):
+I2C Bus 2:
     Chip #3  Flex sensor 3   ADDR→GND   0x48
     Chip #4  Flex sensor 4   ADDR→VDD   0x49
     Chip #5  Button ladder   ADDR→SDA   0x4A
-
-/boot/config.txt additions required:
-    dtparam=i2c_arm_baudrate=400000
-    dtoverlay=i2c-gpio,bus=2,i2c_gpio_sda=22,i2c_gpio_scl=23
 """
 
 import board
@@ -117,10 +111,6 @@ class AirWritingCollector:
         self.ads5.mode = Mode.CONTINUOUS
         self.sensor5 = AnalogIn(self.ads5, 0)
 
-        # --- I2C Bus 2 — software I2C on GPIO 22 (SDA) and GPIO 23 (SCL) ---
-        # busio.I2C does not support software I2C GPIO pins — open /dev/i2c-2 directly
-        # Requires dtoverlay=i2c-gpio,bus=2,i2c_gpio_sda=22,i2c_gpio_scl=23
-        # in /boot/config.txt and a reboot. Verify with: sudo i2cdetect -y 2
         from adafruit_extended_bus import ExtendedI2C
         self.i2c2 = ExtendedI2C(2)   # opens /dev/i2c-2
 
@@ -158,20 +148,6 @@ class AirWritingCollector:
         return ''
     
     def collect_data(self, direction=None, start_position=None, sample_rate=250):
-        """
-        Collect air writing data and save to file.
-
-        Parameters
-        ----------
-        direction : str, optional
-            One of 8 cardinal directions (N, NE, E, SE, S, SW, W, NW).
-            If not provided, user will be prompted to select.
-        start_position : str, optional
-            One of 8 cardinal directions or 'center'.
-            If not provided, user will be prompted to select.
-        sample_rate : int
-            Sampling rate in Hz (default 250).
-        """
         if direction is None:
             direction = prompt_direction()
         if start_position is None:
