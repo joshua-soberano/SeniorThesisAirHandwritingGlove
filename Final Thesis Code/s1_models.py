@@ -90,15 +90,6 @@ MODEL_SLUGS = {
 # =============================================================================
 
 class StretchNet1D(nn.Module):
-    """
-    Input:  (batch, channels=4, time=n_timepoints)
-    Output: logits over n_classes
-
-    Configurable:
-      filters     : (f1, f2) — number of conv filters in each layer
-      kernel_size : conv kernel size (padding = kernel_size // 2 to preserve length)
-      dropout_p   : dropout probability
-    """
     def __init__(self, n_channels=4, n_classes=9, n_timepoints=25,
                  filters=(16, 32), kernel_size=5, dropout_p=0.3):
         super().__init__()
@@ -129,19 +120,6 @@ class StretchNet1D(nn.Module):
 # =============================================================================
 
 class SubwinNet1D(nn.Module):
-    """
-    Input:  (batch, 48, 11)
-      48 rows = 4 channels x 12 features (channel-major)
-      11 cols = 11 overlapping 20ms sub-windows at 10ms stride
-    Single Conv1d layer — no MaxPool.
-    Slides along the sub-window axis.
-    Output: logits over n_classes
-
-    Configurable:
-      n_filters   : number of conv filters (8, 16, or 32)
-      kernel_size : conv kernel size along sub-window axis (2 or 4)
-                    padding = kernel_size // 2 to preserve approximate length
-    """
     def __init__(self, n_classes=9, n_filters=16, kernel_size=2):
         super().__init__()
         pad              = kernel_size // 2
