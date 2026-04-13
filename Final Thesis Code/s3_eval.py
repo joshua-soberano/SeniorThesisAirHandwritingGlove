@@ -11,10 +11,6 @@ Expects these files saved by m5_train.py (all with same timestamp):
     m5_gru_{ts}_avg_intervals.npy
     m5_gru_{ts}_testset.npy
 
-Usage
------
-python m5_eval.py /path/to/sequences/dir
-python m5_eval.py                          # prompts
 """
 
 import os
