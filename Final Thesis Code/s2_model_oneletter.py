@@ -21,11 +21,6 @@ Combined loss
 total_loss = letter_loss + lambda * boundary_loss
 
 where lambda is configurable at runtime.
-
-Usage
------
-python m2_model_oneletter.py /path/to/sequences/dir
-python m2_model_oneletter.py                          # prompts for directory
 """
 
 import os
