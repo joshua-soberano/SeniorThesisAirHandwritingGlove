@@ -1,8 +1,7 @@
 """
 Air Writing Beam Search Decoder  (m5_decoder.py)
 -------------------------------------------------
-Takes a time series of combined letter + boundary probabilities produced
-by the M2 model running online, and decodes them into a word using beam
+Takes a time series of combined letter + boundary probabilities, and decodes them into a word using beam
 search with lookahead.
 
 Input (per timestep, streamed online)
@@ -48,18 +47,6 @@ Output
 Top decoded word string from the best scoring hypothesis.
 Full beam of all B hypotheses with words and scores also available.
 
-Usage
------
-# Standalone file processing mode — accepts combined (T, 30) .npy:
-python m5_decoder.py combined_probs.npy --letters A,B,...,Z
-
-# As a module — feed one (30,) vector per timestep:
-from m5_decoder import BeamDecoder, NgramLanguageModel
-lm      = NgramLanguageModel.from_wordlist('wordlist.txt', letter_classes)
-decoder = BeamDecoder(letter_classes, lm)
-for t in range(T):
-    decoder.step(combined_probs[t])   # (30,) vector
-word = decoder.finalise()
 """
 
 import os
