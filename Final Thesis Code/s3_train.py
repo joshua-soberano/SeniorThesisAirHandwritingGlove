@@ -5,14 +5,7 @@ Loads _sequences.txt files, builds synthetic word sequences,
 trains the GRU, and saves:
     m5_gru_{timestamp}.pt
     m5_gru_{timestamp}_classes.npy
-    m5_gru_{timestamp}_wordlist.npy   (valid words for eval)
-    m5_gru_{timestamp}_avg_intervals.npy  (avg letter duration)
-    m5_gru_{timestamp}_testset.npy    (test samples for eval)
 
-Usage
------
-python m5_train.py /path/to/sequences/dir
-python m5_train.py                          # prompts
 """
 
 import os
