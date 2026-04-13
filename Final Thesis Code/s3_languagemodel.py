@@ -7,25 +7,6 @@ and trains a 5-gram KenLM language model on it.
 The resulting .arpa and .binary files are used by m5_decoder.py
 for character-level language model scoring during beam search.
 
-Dependencies
-------------
-pip install kenlm datasets
-KenLM binaries must be on PATH:
-    sudo apt-get install build-essential cmake
-    git clone https://github.com/kpu/kenlm
-    cd kenlm && mkdir -p build && cd build && cmake .. && make -j4
-    export PATH=$PATH:/path/to/kenlm/build/bin
-
-Output files
-------------
-wiki103_char_5gram.arpa    — ARPA format LM (human readable)
-wiki103_char_5gram.binary  — KenLM binary format (fast loading)
-wiki103_char_corpus.txt    — preprocessed character corpus
-
-Usage
------
-python m5_build_lm.py
-python m5_build_lm.py --order 5 --out_dir ./lm --max_tokens 10000000
 """
 
 import os
